@@ -42,18 +42,21 @@ def load_movies(session):
                 # print "We have a problem. Date not long enough."
                 continue
             # convert the string to a datetime object
-            # release_datetime = datetime.strptime(release_date, "%d-%b-%Y")
+            
             release_datetime = datetime.strptime(release_date, "%d-%b-%Y")
+            
             # YMD_release_datetime = 
             print release_datetime
 
 
             movie.id = row[0]
             movie.title = row[1]
-            movie.release_date = release_date
+            movie.title = movie.title.decode("latin-1")
+            movie.release_date = release_datetime
             movie.url = row[3]
             session.add(movie)
-    # session.commit()
+    # print session
+    session.commit()
 
 def load_ratings(session):
     # use u.data
