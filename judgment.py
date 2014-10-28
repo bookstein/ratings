@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask import session as browser_session
 import model
+#from sqlalchemy import and_
 
 
 app = Flask(__name__)
@@ -46,7 +47,7 @@ def login_validation():
     # TODO: Consider what happens if there is more than one user with that email address
     user = db_session.query(model.User).filter_by(email=email).first()
     if user.password == password:
-        browser_session["user"] = email
+        browser_session["user"] = user.id
         print browser_session
         return render_template("welcome.html", occupation=user.occupation)
     else:
@@ -60,10 +61,13 @@ def view_user(id):
     return render_template("user.html", ratings_list = ratings_list)
 
 
-@app.route("/movie/<int:id>")
-def view_movie(id):
-    movie = db_session.query(model.Movie).filter_by(id = id).one()
-    print movie.url
+@app.route("/movie/<int:movie_id>")
+def view_movie(movie_id):
+    movie = db_session.query(model.Movie).filter_by(id = movie_id).one()
+    #user_has_rated = db_session.query(model.Rating).filter(and_(id == movie_id, 
+
+    # query.filter(and_(User.name == 'ed', User.fullname == 'Ed Jones'))
+
     return render_template("movie.html", title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
 
 if __name__ == "__main__":
