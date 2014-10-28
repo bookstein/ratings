@@ -31,7 +31,7 @@ def signup_complete():
         db_session.add(new_user)
         db_session.commit()
 
-    return "IT WORKED"
+    return render_template("welcome.html", occupation=new_user.occupation)
 
 if __name__ == "__main__":
     db_session = model.connect()
