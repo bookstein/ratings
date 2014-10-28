@@ -19,6 +19,18 @@ def signup_view():
 
 @app.route("/signup", methods=["POST"])
 def signup_complete():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    pass_validation = request.form.get("passwordvalidation")
+    age = request.form.get("age")
+    occupation = request.form.get("occupation")
+    zipcode = request.form.get("zip")
+
+    if password == pass_validation:
+        new_user = model.User(email = email, password = password, age = age, occupation = occupation, zipcode = zipcode)
+        db_session.add(new_user)
+        db_session.commit()
+
     return "IT WORKED"
 
 if __name__ == "__main__":
