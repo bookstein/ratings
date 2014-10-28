@@ -1,0 +1,9 @@
+<html>
+    {% for message in get_flashed_messages() %}
+    <div class=flash>{{ message }}</div>
+    {% endfor %}
+    <h2><a href="{{ url}}">{{ title }}</a></h2>
+    <h3>{{ release_date }}</h3>
+    
+
+</html>

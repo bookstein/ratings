@@ -52,10 +52,16 @@ def login_validation():
 
 @app.route("/user/<int:id>")
 def view_user(id):
-    pass
     ratings_list = db_session.query(model.Rating).filter_by(user_id = id).all()
     print len(ratings_list)
     return render_template("user.html", ratings_list = ratings_list)
+
+
+@app.route("/movie/<int:id>")
+def view_movie(id):
+    movie = db_session.query(model.Movie).filter_by(id = id).one()
+    print movie.url
+    return render_template("movie.html", title=movie.title , release_date=movie.release_date, url=movie.url)
 
 if __name__ == "__main__":
     db_session = model.connect()

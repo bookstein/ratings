@@ -53,7 +53,7 @@ def load_movies(session):
             movie.title = row[1]
             movie.title = movie.title.decode("latin-1")
             movie.release_date = release_datetime
-            movie.url = row[3]
+            movie.url = row[4]
             session.add(movie)
     # print session
     session.commit()
@@ -85,8 +85,8 @@ def load_ratings(session):
 def main(session):
     # You'll call each of the load_* functions with the session as an argument
     #load_users(session)
-    # load_movies(session)
-    load_ratings(session)
+    load_movies(session)
+    #load_ratings(session)
 
 if __name__ == "__main__":
     s = model.connect()
