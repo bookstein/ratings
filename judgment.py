@@ -3,13 +3,13 @@ import model
 
 
 app = Flask(__name__)
-
+app.secret_key = "ADFLKASDJF"
 
 @app.route("/")
 def index():
     # session = model.connect()
     print "hello"
-    user_list = db_session.query(model.User).limit(5).all()
+    user_list = db_session.query(model.User).limit(25).all()
     print user_list
     return render_template("user_list.html", user_list=user_list)
 
@@ -50,7 +50,12 @@ def login_validation():
         flash("Invalid password.")
         return redirect("/login")
 
-
+@app.route("/user/<int:id>")
+def view_user(id):
+    pass
+    ratings_list = db_session.query(model.Rating).filter_by(user_id = id).all()
+    print len(ratings_list)
+    return render_template("user.html", ratings_list = ratings_list)
 
 if __name__ == "__main__":
     db_session = model.connect()
