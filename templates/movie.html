@@ -2,8 +2,18 @@
     {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
     {% endfor %}
-    <h2><a href="{{ url}}">{{ title }}</a></h2>
+    <h2><a href="{{ url }}">{{ title }}</a></h2>
     <h3>{{ release_date }}</h3>
     
+    {% if not browser_session["user"] %}
+    <p> Please sign up or log in to leave a review!</p>
+    {% endif %}
+
+    {% if browser_session["user"] %}
+        <form action="/new/rating" method="POST">
+            <label for="rating">Rate this movie:</label>
+            <input type="text" name="rating">
+        </form>
+    {% endif %}
 
 </html>

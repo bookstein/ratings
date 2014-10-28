@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request, flash
+from flask import session as browser_session
 import model
 
 
@@ -45,6 +46,8 @@ def login_validation():
     # TODO: Consider what happens if there is more than one user with that email address
     user = db_session.query(model.User).filter_by(email=email).first()
     if user.password == password:
+        browser_session["user"] = email
+        print browser_session
         return render_template("welcome.html", occupation=user.occupation)
     else:
         flash("Invalid password.")
@@ -61,7 +64,7 @@ def view_user(id):
 def view_movie(id):
     movie = db_session.query(model.Movie).filter_by(id = id).one()
     print movie.url
-    return render_template("movie.html", title=movie.title , release_date=movie.release_date, url=movie.url)
+    return render_template("movie.html", title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
 
 if __name__ == "__main__":
     db_session = model.connect()
