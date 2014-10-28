@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 import model
 
 
@@ -32,6 +32,25 @@ def signup_complete():
         db_session.commit()
 
     return render_template("welcome.html", occupation=new_user.occupation)
+
+@app.route("/login")
+def login_view():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login_validation():
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    # TODO: Consider what happens if there is more than one user with that email address
+    user = db_session.query(model.User).filter_by(email=email).first()
+    if user.password == password:
+        return render_template("welcome.html", occupation=user.occupation)
+    else:
+        flash("Invalid password.")
+        return redirect("/login")
+
+
 
 if __name__ == "__main__":
     db_session = model.connect()
