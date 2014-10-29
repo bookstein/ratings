@@ -64,16 +64,45 @@ def view_user(id):
 @app.route("/movie/<int:movie_id>")
 def view_movie(movie_id):
     movie = db_session.query(model.Movie).filter_by(id = movie_id).one()
+    browser_session["movies"] = browser_session.setdefault("movies", [])
+    # print type(browser_session["movies"])
+    browser_session["movies"].append(movie.id)
+    print browser_session 
     user_has_rated = db_session.query(model.Rating).filter(and_(movie_id == movie_id, model.Rating.user_id == browser_session["user"])).all()
 
     if user_has_rated:
-        # rating = user_has_rated.rating
-        pass
+        print user_has_rated[0].rating
     else:
         user_has_rated = False
 
-    print user_has_rated.rating
+   #print user_has_rated.rating
     return render_template("movie.html", user_has_rated = user_has_rated, title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
+
+
+@app.route("/new/rating", methods=["POST"])
+def add_rating():
+    rating = request.form.get("rating")
+    new_rating = model.Rating(user_id = browser_session["user"], movie_id = browser_session["movies"][-1], rating=rating)
+    
+    db_session.add(new_rating)
+    db_session.commit()
+
+    flash("Your rating has been saved!")
+    return redirect("/movie/%d" % new_rating.movie_id)
+
+
+    # user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
+    # movie_id = Column(Integer, ForeignKey('movies.id'), nullable = False)
+    # rating = Column(Integer, nullable = False)
+
+
+    # if password == pass_validation:
+    #     new_user = model.User(email = email, password = password, age = age, occupation = occupation, zipcode = zipcode)
+    #     db_session.add(new_user)
+    #     db_session.commit()
+
+
+
 
 if __name__ == "__main__":
     db_session = model.connect()
