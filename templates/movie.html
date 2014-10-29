@@ -7,22 +7,18 @@
     
     {% if not browser_session["user"] %}
     <p> Please sign up or log in to leave a review!</p>
-    {% endif %}
 
-    {% if browser_session["user"] and not user_has_rated %}
+    {% else %}
         <form action="/new/rating" method="POST">
+            <input type="hidden" name="movie_id" value="{{movie_id}}">
+            {% if user_has_rated|length>0 %}
+            <h4>You rated this movie {{ user_has_rated[0].rating }}</h4>
+            <label for="rating">Update this rating:</label>
+            {% else %}
             <label for="rating">Rate this movie:</label>
+            {% endif %}
             <input type="text" name="rating">
             <input type="submit" value="ENTER!">
-        </form>
-    {% endif %}
-
-    {% if browser_session["user"] and user_has_rated %}
-        <h4>You rated this movie {{ user_has_rated[0].rating }}</h4>
-        <form action="/update/rating" method="POST">
-            <label for="rating">Update this movie rating:</label>
-            <input type="text" name="rating">
-            <input type="submit" value="ENTER NEW RATING!">
         </form>
     {% endif %}
 
