@@ -19,9 +19,10 @@
 
     {% if browser_session["user"] and user_has_rated %}
         <h4>You rated this movie {{ user_has_rated[0].rating }}</h4>
-        <form action="/new/rating" method="POST">
+        <form action="/update/rating" method="POST">
             <label for="rating">Update this movie rating:</label>
             <input type="text" name="rating">
+            <input type="submit" value="ENTER NEW RATING!">
         </form>
     {% endif %}
 
