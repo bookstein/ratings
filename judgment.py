@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask import session as browser_session
 import model
-#from sqlalchemy import and_
+from sqlalchemy import and_
 
 
 app = Flask(__name__)
@@ -64,11 +64,16 @@ def view_user(id):
 @app.route("/movie/<int:movie_id>")
 def view_movie(movie_id):
     movie = db_session.query(model.Movie).filter_by(id = movie_id).one()
-    #user_has_rated = db_session.query(model.Rating).filter(and_(id == movie_id, 
+    user_has_rated = db_session.query(model.Rating).filter(and_(movie_id == movie_id, model.Rating.user_id == browser_session["user"])).all()
 
-    # query.filter(and_(User.name == 'ed', User.fullname == 'Ed Jones'))
+    if user_has_rated:
+        # rating = user_has_rated.rating
+        pass
+    else:
+        user_has_rated = False
 
-    return render_template("movie.html", title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
+    print user_has_rated.rating
+    return render_template("movie.html", user_has_rated = user_has_rated, title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
 
 if __name__ == "__main__":
     db_session = model.connect()
