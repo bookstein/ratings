@@ -1,7 +1,8 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask import session as browser_session
 import model
-from sqlalchemy import and_, desc
+from model import db_session
+from sqlalchemy import desc
 
 
 app = Flask(__name__)
@@ -106,5 +107,4 @@ def add_or_update_rating():
 
 
 if __name__ == "__main__":
-    db_session = model.connect()
     app.run(debug=True)

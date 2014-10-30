@@ -46,6 +46,31 @@ class User(Base):
         
         return correlation.pearson(paired_ratings)
 
+    def predict_rating(self, movie_id):
+        m = db_session.query(Movie).get(movie_id)
+
+        # if not u.ratings.movie_id:
+        other_ratings = db_session.query(Rating).filter_by(movie_id = m.id).all()
+        other_users = []
+
+        for rating in other_ratings:
+            other_users.append(rating.user)
+
+        similarity_list = []
+
+        for other_user in other_users:
+            correlation = self.similarity(other_user)
+            similarity_list.append((other_user.id, correlation))
+
+        sorted_sim_list = sorted(similarity_list, key=lambda x: x[1])
+
+        best_match_id, best_match_correlation = sorted_sim_list[-1]
+
+        best_match_rating = db_session.query(Rating).filter_by(movie_id=movie_id).filter_by(user_id=best_match_id).one()
+
+        predicted_rating = best_match_rating.rating * best_match_correlation
+        return predicted_rating
+
 class Movie(Base):
     __tablename__ = "movies"
 
@@ -83,4 +108,5 @@ def main():
     pass
 
 if __name__ == "__main__":
+    db_session = connect()
     main()
