@@ -102,31 +102,6 @@ def add_or_update_rating():
     flash("Your rating has been saved!")
     return redirect("/movie/%d" % rating.movie_id)
 
-# @app.route("/update/rating", methods=["POST"])
-# def update_rating():
-#     rating_num = request.form.get("rating")
-#     user = db_session.query(model.User).filter_by(id=browser_session["user"]).one()
-    
-#     # user.ratings[-1]
-#     # movie_id = browser_session["movies"][-1]
-#     # user.ratings
-    
-#     db_session.add(new_rating)
-#     db_session.commit()
-
-#     flash("Your rating has been saved!")
-#     return redirect("/movie/%d" % new_rating.movie_id)
-
-    # user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
-    # movie_id = Column(Integer, ForeignKey('movies.id'), nullable = False)
-    # rating = Column(Integer, nullable = False)
-
-
-    # if password == pass_validation:
-    #     new_user = model.User(email = email, password = password, age = age, occupation = occupation, zipcode = zipcode)
-    #     db_session.add(new_user)
-    #     db_session.commit()
-
 
 
 
