@@ -51,27 +51,18 @@ class User(Base):
         m = db_session.query(Movie).get(movie_id)
 
         q = db_session.query(Rating).filter_by(movie_id = m.id)
-        # if not u.ratings.movie_id:
-
         other_ratings = q.all()
-        other_users = []
-
-        for rating in other_ratings:
-            other_users.append(rating.user)
-
+        
         similarity_list = []
-
-        for other_user in other_users:
-            correlation = self.similarity(other_user)
-            similarity_list.append((other_user.id, correlation))
+        for rating in other_ratings:
+            correlation = self.similarity(rating.user)
+            similarity_list.append((rating.rating, correlation))
 
         sorted_sim_list = sorted(similarity_list, key=lambda x: x[1])
 
-        best_match_id, best_match_correlation = sorted_sim_list[-1]
+        best_match_rating, best_match_correlation = sorted_sim_list[-1]
 
-        best_match_rating = q.filter_by(user_id=best_match_id).one()
-
-        predicted_rating = best_match_rating.rating * best_match_correlation
+        predicted_rating = best_match_rating * best_match_correlation
         return predicted_rating
 
 class Movie(Base):
