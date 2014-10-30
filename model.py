@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy import ForeignKey
+import correlation
 
 
 ENGINE = None
@@ -24,8 +25,10 @@ class User(Base):
     zipcode = Column(String(15), nullable=True)
     occupation = Column(String(60), nullable=True)
 
-    def get_paired_ratings(self, other_user):
-         # returns a list of paired ratings for each movie that 2 users have rated
+    def similarity(self, other_user):
+
+        # returns a correlation based on a list of paired ratings 
+        # for each movie that 2 users have rated
         u_ratings = db_session.query(Rating).filter_by(user_id=self.id)
         
         u_rating_dict = {}
@@ -40,7 +43,8 @@ class User(Base):
             if match:
                 pair = (match, o_rating.rating)
                 paired_ratings.append(pair)
-        return paired_ratings
+        
+        return correlation.pearson(paired_ratings)
 
 class Movie(Base):
     __tablename__ = "movies"
@@ -62,25 +66,6 @@ class Rating(Base):
     movie = relationship("Movie", backref=backref("ratings", order_by=rating))
     
     # ratings is a backref from the Rating class
-
-
-# def get_paired_ratings(user, other_user):
-#     # returns a list of paired ratings for each movie that 2 users have rated
-#     u_ratings = db_session.query(Rating).filter_by(user_id=user.id)
-    
-#     u_rating_dict = {}
-#     for rating in u_ratings:
-#         u_rating_dict[rating.movie_id] = rating.rating
-    
-#     o_ratings = db_session.query(Rating).filter_by(user_id=other_user.id)
-
-#     paired_ratings = []
-#     for o_rating in o_ratings:
-#         match = u_rating_dict.get(o_rating.movie_id)
-#         if match:
-#             pair = (match, o_rating.rating)
-#             paired_ratings.append(pair)
-#     return paired_ratings
 
 ### End class declarations
 
