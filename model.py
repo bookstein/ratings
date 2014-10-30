@@ -29,6 +29,7 @@ class User(Base):
 
         # returns a correlation based on a list of paired ratings 
         # for each movie that 2 users have rated
+
         u_ratings = db_session.query(Rating).filter_by(user_id=self.id)
         
         u_rating_dict = {}
@@ -49,8 +50,10 @@ class User(Base):
     def predict_rating(self, movie_id):
         m = db_session.query(Movie).get(movie_id)
 
+        q = db_session.query(Rating).filter_by(movie_id = m.id)
         # if not u.ratings.movie_id:
-        other_ratings = db_session.query(Rating).filter_by(movie_id = m.id).all()
+
+        other_ratings = q.all()
         other_users = []
 
         for rating in other_ratings:
@@ -66,7 +69,7 @@ class User(Base):
 
         best_match_id, best_match_correlation = sorted_sim_list[-1]
 
-        best_match_rating = db_session.query(Rating).filter_by(movie_id=movie_id).filter_by(user_id=best_match_id).one()
+        best_match_rating = q.filter_by(user_id=best_match_id).one()
 
         predicted_rating = best_match_rating.rating * best_match_correlation
         return predicted_rating
