@@ -49,21 +49,15 @@ class User(Base):
 
     def predict_rating(self, movie_id):
         m = db_session.query(Movie).get(movie_id)
-
-        q = db_session.query(Rating).filter_by(movie_id = m.id)
-        other_ratings = q.all()
         
         similarity_list = []
-        for rating in other_ratings:
+        for rating in m.ratings:
             correlation = self.similarity(rating.user)
             similarity_list.append((rating.rating, correlation))
 
-        sorted_sim_list = sorted(similarity_list, key=lambda x: x[1])
+        weighted_mean = sum(map(lambda x: x[0]*x[1], similarity_list)) / sum(map(lambda x: x[1], similarity_list))
 
-        best_match_rating, best_match_correlation = sorted_sim_list[-1]
-
-        predicted_rating = best_match_rating * best_match_correlation
-        return predicted_rating
+        return weighted_mean
 
 class Movie(Base):
     __tablename__ = "movies"
