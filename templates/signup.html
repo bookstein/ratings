@@ -1,21 +1,34 @@
-<html>
+{% extends "base.html" %}
+{% block content%}
     <form action="/signup" method="POST">
-        <label for="email">Enter email address</label>
-        <input type="text" name="email">
-        <label for ="password">Enter new password</label>
-        <input type="text" name="password">
-        <label for ="passwordvalidation">Enter password again</label>
-        <input type="text" name="passwordvalidation">
+        <div class="form-group">
+            <label for="email">Enter email address</label>
+            <input type="text" name="email">
+        </div>
+        <div class="form-group">
+            <label for ="password">Enter new password</label>
+            <input type="text" name="password">
+        </div>
 
-        <label for ="age">Enter age</label>
-        <input type="text" name="age">
+        <div class="form-group">
+            <label for ="passwordvalidation">Enter password again</label>
+            <input type="text" name="passwordvalidation">
+        </div>
 
-        <label for ="occupation">Enter occupation</label>
-        <input type="text" name="occupation">
-
-        <label for ="zip">Enter zip code</label>
-        <input type="text" name="zip">
+        <div class="form-group">
+            <label for ="age">Enter age</label>
+            <input type="text" name="age">
+        </div>
+        <div class="form-group">
+            <label for ="occupation">Enter occupation</label>
+            <input type="text" name="occupation">
+        </div>
+        <div class="form-group">
+            <label for ="zip">Enter zip code</label>
+            <input type="text" name="zip">
+        </div>
 
         <input type="submit" value="SIGN UP!">
     </form>
-</html>
+
+{% endblock %}

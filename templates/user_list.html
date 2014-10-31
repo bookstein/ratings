@@ -1,5 +1,8 @@
-<html>
+{% extends "base.html" %}
+{% block content%}
+
 {% for user in user_list %}
 <h2>User <a href="/user/{{user.id}}">{{ user.id }}</a>, age {{ user.age }}, has {{ user.ratings|length }} ratings</h2>
 {% endfor %}
-</html>
+
+{% endblock %}

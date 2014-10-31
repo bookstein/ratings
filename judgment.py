@@ -65,15 +65,22 @@ def view_user(id):
 @app.route("/movie/<int:movie_id>")
 def view_movie(movie_id): 
     movie = db_session.query(model.Movie).filter_by(id = movie_id).one()
-    print "MOVIE ID ", movie.id
-    # browser_session["movies"] = browser_session.setdefault("movies", [])
-    # # print type(browser_session["movies"])
-    # browser_session["movies"].append(movie.id)
-    # print browser_session 
-    user_has_rated = db_session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id == browser_session["user"]).order_by(desc(model.Rating.id)).all()
+    if hasattr(browser_session, "user"):
+        user_id = browser_session["user"]
+    else:
+        flash("Please log in or sign up to see reviews!")
+        return redirect("/signup")
 
-   #print user_has_rated.rating
-    return render_template("movie.html", movie_id = movie_id, user_has_rated = user_has_rated, title=movie.title , release_date=movie.release_date, url=movie.url, browser_session = browser_session)
+    if user_id: # CAN I DO THIS?
+        user_rating = db_session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id == user_id).order_by(desc(model.Rating.id)).all()
+
+        if user_rating == []:
+            user = db_session.query(model.User).get(user_id)
+            predicted_rating = user.predict_rating(movie_id)
+        else:
+            predicted_rating = None
+
+    return render_template("movie.html", movie = movie, user_rating = user_rating, predicted_rating = predicted_rating)
 
 
 @app.route("/new/rating", methods=["POST"])
