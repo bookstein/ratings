@@ -65,13 +65,10 @@ def view_user(id):
 @app.route("/movie/<int:movie_id>")
 def view_movie(movie_id): 
     movie = db_session.query(model.Movie).filter_by(id = movie_id).one()
-    if hasattr(browser_session, "user"):
-        user_id = browser_session["user"]
-    else:
-        flash("Please log in or sign up to see reviews!")
-        return redirect("/signup")
+    user_id = browser_session["user"]
+    # unresolved issue: what happens if user isn't logged in?
 
-    if user_id: # CAN I DO THIS?
+    if browser_session["user"]: # CAN I DO THIS?
         user_rating = db_session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id == user_id).order_by(desc(model.Rating.id)).all()
 
         if user_rating == []:
