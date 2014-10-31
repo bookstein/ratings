@@ -8,10 +8,12 @@ import correlation
 
 
 
-ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+ENGINE = create_engine("sqlite:///ratings.db", echo=False)
 db_session = scoped_session(sessionmaker(bind=ENGINE, autocommit=False, autoflush = False))
 
 Base = declarative_base()
+Base.query = db_session.query_property()
+
 
 
 ### Class declarations go here
