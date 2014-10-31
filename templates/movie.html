@@ -1,16 +1,17 @@
-{% extends "base.html"}
-{% block %}
+{% extends "base.html" %}
+{% block content %}
     {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
     {% endfor %}
+
     <h2><a href="{{ url }}">{{ movie.title }}</a></h2>
-    <h3>{{ movie.release_date }}</h3>
+    <h3>Release date: {{ movie.release_date }}</h3>
     
 
     <form action="/new/rating" method="POST">
         <input type="hidden" name="movie_id" value="{{movie_id}}">
-        {% if user_rating|length>0 %}
-        <h4>You rated this movie {{ user_rating[0].rating }}</h4>
+        {% if not predicted_rating %}
+        <h4>You rated this movie {{ user_rating.rating }}</h4>
         <div class="form-group">
             <label for="rating">Update this rating:</label>
         </div>

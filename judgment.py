@@ -68,11 +68,13 @@ def view_movie(movie_id):
     user_id = browser_session["user"]
     # unresolved issue: what happens if user isn't logged in?
 
-    if browser_session["user"]: # CAN I DO THIS?
-        user_rating = db_session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id == user_id).order_by(desc(model.Rating.id)).all()
+    if browser_session["user"]: # CAN I DO THIS? --> use .get
+        user_rating = db_session.query(model.Rating).filter(model.Rating.movie_id == movie_id).filter(model.Rating.user_id == user_id).first()
+        print user_rating
 
-        if user_rating == []:
-            user = db_session.query(model.User).get(user_id)
+        user = db_session.query(model.User).get(user_id)
+
+        if not user_rating and len(user.ratings) > 0:
             predicted_rating = user.predict_rating(movie_id)
         else:
             predicted_rating = None
@@ -83,12 +85,14 @@ def view_movie(movie_id):
 @app.route("/new/rating", methods=["POST"])
 def add_or_update_rating():
     movie_id = request.form.get("movie_id")
+    movie_id = int(movie_id)
+    print "MOVIE ID", movie_id, type(movie_id)
     rating_num = request.form.get("rating")
     user_id = browser_session["user"]
 
-    if type(rating_num) != int or rating_num < 1 or rating_num > 5:
+    if rating_num < 1 or rating_num > 5:
         flash("Rating must be a whole number from 1 to 5.")
-        return redirect("/movie/%d" % int(movie_id))
+        return redirect("/movie/%d" % movie_id)
 
     rating_in_db = db_session.query(model.Rating).filter(model.Rating.movie_id==movie_id).filter(model.Rating.user_id==user_id).all()
 
