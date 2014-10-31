@@ -85,7 +85,7 @@ def view_movie(movie_id):
 @app.route("/new/rating", methods=["POST"])
 def add_or_update_rating():
     movie_id = request.form.get("movie_id")
-    movie_id = int(movie_id)
+    movie_id = int(movie_id) # ERROR: ValueError: invalid literal for int() with base 10: ''
     print "MOVIE ID", movie_id, type(movie_id)
     rating_num = request.form.get("rating")
     user_id = browser_session["user"]
