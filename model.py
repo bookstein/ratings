@@ -48,12 +48,13 @@ class User(Base):
         return correlation.pearson(paired_ratings)
 
     def predict_rating(self, movie_id):
-        m = db_session.query(Movie).get(movie_id)
+        m = db_session.query(Movie).get(movie_id) 
         
         similarity_list = []
         for rating in m.ratings:
             correlation = self.similarity(rating.user)
-            similarity_list.append((rating.rating, correlation))
+            if correlation > 0:
+                similarity_list.append((rating.rating, correlation))
 
         weighted_mean = sum(map(lambda x: x[0]*x[1], similarity_list)) / sum(map(lambda x: x[1], similarity_list))
 
